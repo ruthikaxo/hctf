@@ -1,0 +1,18 @@
+The IP address and SSH server port is 100.107.36.130 and 2221 respectively
+
+The first successful login can be found in the ssh logs next to the log stating that log in was accepted
+
+To find the unusual login, both forensic pieces of evidence need to be compared side by side to identify actions that can be classified as unusual. 
+For this CTF, the attacker logs into the server with an ip address of 2.67.182.119 at 2024-02-19 04:00:14. It's important to also note that this time is also unusual compared to other login events (4am).
+
+The fingerprint can be found just after the connection was initiated and was discovered to be - OPkBSs6okUKraq8pYo4XwwBg55QSo210F09FCe1-yj4
+
+Checking the bash logs helps us discover the first command executed by the attacker after the previosuly ascertained timestamp. The first command executed by the attacker was whoami. The next command was uname -a. This shows that they were not acquainted with the device and were trying to obtain basic information regarding the device's identity, system version and architecture.
+
+The logs show the attacker tried to access the usernames and correlating hashed passwords on the server. Afterwards they got detailed information on the services running on the server and downloaded a suspicious compressed setup folder from https://gnu-packages.com/prebuilts/iproute2/latest.tar.gz using the wget utility and saved it in the tmp directory as "latest_iproute.tar.gz"
+
+After extracting the files in the folder, they deleted it in a secure manner by using the shred command with '-Zu' as arguments, which overwrites files with zeros before deleting it, presumably in a bid to cover their tracks and ran the setup file before logging out.
+
+It should be noted that they ran the setup of their suspicious application before logging out and this action can be classified as suspicious as they could have done this to create a backdoor from which more attacks on the server could be performed. These sequence of events are suspicious and can be termed as malicious because of the mode of operations used by the attacker.
+
+After the last question, the flag was displayed. The flag for this CTF was -> HTB{4n_unusual_s1ght1ng_1n_SSH_l0gs!} 
